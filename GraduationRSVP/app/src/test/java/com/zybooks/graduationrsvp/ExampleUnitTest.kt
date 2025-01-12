@@ -1,4 +1,4 @@
-package com.example.graduationrsvp
+package com.zybooks.graduationrsvp
 
 import org.junit.Test
 

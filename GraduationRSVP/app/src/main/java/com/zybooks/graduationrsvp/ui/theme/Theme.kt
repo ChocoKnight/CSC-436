@@ -1,4 +1,4 @@
-package com.example.graduationrsvp.ui.theme
+package com.zybooks.graduationrsvp.ui.theme
 
 import android.app.Activity
 import android.os.Build

@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.graduationrsvp"
-    compileSdk = 34
+    namespace = "com.zybooks.graduationrsvp"
+    compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.graduationrsvp"
+        applicationId = "com.zybooks.graduationrsvp"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
