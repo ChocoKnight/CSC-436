@@ -2,3 +2,4 @@
 Labs are located in their respective folders
 
 Graduation RSVP [here](GraduationRSVP)
+Pizza Party [here](PizzaParty/)
