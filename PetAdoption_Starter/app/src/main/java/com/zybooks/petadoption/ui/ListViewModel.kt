@@ -1,4 +1,8 @@
 package com.zybooks.petadoption.ui
 
-class ListViewModel {
+import androidx.lifecycle.ViewModel
+import com.zybooks.petadoption.data.PetDataSource
+
+class ListViewModel : ViewModel() {
+    val petList = PetDataSource().loadPets()
 }
