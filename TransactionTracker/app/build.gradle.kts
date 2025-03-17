@@ -2,14 +2,15 @@ plugins {
    alias(libs.plugins.android.application)
    alias(libs.plugins.jetbrains.kotlin.android)
    alias(libs.plugins.jetbrains.kotlin.serialization)
+   id("com.google.devtools.ksp")
 }
 
 android {
-   namespace = "com.zybooks.petadoption"
+   namespace = "com.zybooks.studyhelper"
    compileSdk = 34
 
    defaultConfig {
-      applicationId = "com.zybooks.petadoption"
+      applicationId = "com.zybooks.studyhelper"
       minSdk = 24
       targetSdk = 34
       versionCode = 1
@@ -51,9 +52,12 @@ android {
 }
 
 dependencies {
-   implementation(libs.androidx.navigation.compose)
-   implementation(libs.kotlinx.serialization.json)
-   implementation(libs.androidx.lifecycle.viewmodel.compose)
+   implementation("androidx.room:room-runtime:2.6.1")
+   ksp("androidx.room:room-compiler:2.6.1")
+   implementation("androidx.room:room-ktx:2.6.1")
+   implementation(libs.androidx.lifecycle.livedata.ktx)
+   implementation(libs.androidx.lifecycle.runtime.compose)
+   implementation(libs.androidx.runtime.livedata)
    implementation(libs.androidx.core.ktx)
    implementation(libs.androidx.lifecycle.runtime.ktx)
    implementation(libs.androidx.activity.compose)
@@ -62,6 +66,8 @@ dependencies {
    implementation(libs.androidx.ui.graphics)
    implementation(libs.androidx.ui.tooling.preview)
    implementation(libs.androidx.material3)
+   implementation(libs.androidx.navigation.compose)
+   implementation(libs.kotlinx.serialization.json)
    testImplementation(libs.junit)
    androidTestImplementation(libs.androidx.junit)
    androidTestImplementation(libs.androidx.espresso.core)

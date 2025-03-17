@@ -1,14 +1,16 @@
-package com.zybooks.petadoption.ui
+package com.zybooks.studyhelper.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,7 +34,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.zybooks.petadoption.ui.theme.TransactionTrackerTheme
+import com.zybooks.studyhelper.ui.theme.TransactionTrackerTheme
 import kotlinx.serialization.Serializable
 
 sealed class Routes {
@@ -44,6 +46,9 @@ sealed class Routes {
 
     @Serializable
     data object TransactionHistory
+
+    @Serializable
+    data object NewTransaction
 }
 
 @Composable
@@ -55,13 +60,16 @@ fun TransactionTrackerApp() {
         startDestination = Routes.Home
     ) {
         composable<Routes.Home> {
-            HomeScreen()
+            HomeScreen(navController)
         }
         composable<Routes.Camera> {
-            CameraScreen()
+            CameraScreen(navController)
         }
         composable<Routes.TransactionHistory> {
-            HistoryScreen()
+            HistoryScreen(navController)
+        }
+        composable<Routes.NewTransaction> {
+            TransactionScreen(navController)
         }
     }
 }
@@ -72,7 +80,8 @@ fun TransactionTrackerBar(
     title: String,
     modifier: Modifier = Modifier,
     canNavigateBack: Boolean = false,
-    onUpClick: () -> Unit = { }
+    navController: NavController,
+//    onUpClick: () -> Unit = { }
 ) {
     TopAppBar(
         title = { Text(title) },
@@ -82,7 +91,9 @@ fun TransactionTrackerBar(
         modifier = modifier,
         navigationIcon = {
             if (canNavigateBack) {
-                IconButton(onClick = onUpClick) {
+                IconButton(onClick = {
+                    navController.navigateUp()
+                }) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
                 }
             }
@@ -99,7 +110,7 @@ enum class AppScreen(val route: Any, val title: String, val icon: ImageVector) {
 @Composable
 fun BottomNavigationBar(
     navController: NavController,
-    modifier: Modifier = Modifier,
+//    modifier: Modifier = Modifier,
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
@@ -109,7 +120,9 @@ fun BottomNavigationBar(
             NavigationBarItem(
                 selected = currentRoute?.endsWith(item.route.toString()) == true,
                 onClick = {
-                    // TODO: Navigate to clicked item's screen
+                    navController.navigate(item.route) {
+                        popUpTo(navController.graph.startDestinationId)
+                    }
                 },
                 icon = {
                     Icon(item.icon, contentDescription = item.title)
@@ -123,20 +136,40 @@ fun BottomNavigationBar(
 }
 
 @Composable
-fun HomeScreen(
-    modifier: Modifier = Modifier
-//    viewModel: ListViewModel = viewModel()
+fun FloatingActionButtonAddTransaction(
+    navController: NavController
 ) {
-    val navController = rememberNavController()
+    FloatingActionButton(
+        onClick = {
+            navController.navigate(Routes.NewTransaction) {
+                popUpTo(navController.graph.startDestinationId)
+            }
+        }
+    ) {
+        Icon(
+            imageVector = Icons.Default.Add,
+            contentDescription = "Add Transaction"
+        )
+    }
+}
 
+@Composable
+fun HomeScreen(
+    navController: NavController,
+    modifier: Modifier = Modifier,
+) {
     Scaffold(
         topBar = {
             TransactionTrackerBar(
-                title = "Home"
+                title = "Home",
+                navController = navController
             )
         },
         bottomBar = {
             BottomNavigationBar(navController = navController)
+        },
+        floatingActionButton = {
+            FloatingActionButtonAddTransaction(navController = navController)
         }
     ) {
             innerPadding ->
@@ -175,38 +208,96 @@ fun HomeScreen(
 
 @Composable
 fun CameraScreen(
+    navController: NavController,
     modifier: Modifier = Modifier
 ) {
-    Text(
-        text = "Camera",
-        modifier = modifier.padding(6.dp),
-    )
+    Scaffold(
+        topBar = {
+            TransactionTrackerBar(
+                title = "Camera",
+                navController = navController
+            )
+        },
+        bottomBar = {
+            BottomNavigationBar(navController = navController)
+        }
+    ) {
+            innerPadding ->
+        Column(
+            modifier = modifier.padding(innerPadding)
+        ) {
+            Text(
+                text = "Camera",
+                modifier = modifier.padding(6.dp),
+            )
+        }
+    }
 }
 
 @Composable
 fun TransactionScreen(
+    navController: NavController,
     modifier: Modifier = Modifier
 ) {
-    Text(
-        text = "Transactions",
-        modifier = modifier.padding(6.dp),
-    )
+    Scaffold(
+        topBar = {
+            TransactionTrackerBar(
+                title = "Transactions",
+                canNavigateBack = true,
+                navController = navController
+            )
+        },
+        bottomBar = {
+            BottomNavigationBar(navController = navController)
+        }
+    ) {
+            innerPadding ->
+        Column(
+            modifier = modifier.padding(innerPadding)
+        ) {
+            Text(
+                text = "Transaction History",
+                modifier = modifier.padding(6.dp),
+            )
+        }
+    }
 }
 
 @Composable
 fun HistoryScreen(
+    navController: NavController,
     modifier: Modifier = Modifier
 ) {
-    Text(
-        text = "History",
-        modifier = modifier.padding(6.dp),
-    )
+    Scaffold(
+        topBar = {
+            TransactionTrackerBar(
+                title = "Transaction History",
+                navController = navController
+            )
+        },
+        bottomBar = {
+            BottomNavigationBar(navController = navController)
+        },
+        floatingActionButton = {
+            FloatingActionButtonAddTransaction(navController = navController)
+        }
+    ) {
+            innerPadding ->
+        Column(
+            modifier = modifier.padding(innerPadding)
+        ) {
+            Text(
+                text = "Transaction History",
+                modifier = modifier.padding(6.dp),
+            )
+        }
+    }
 }
 
 @Preview
 @Composable
 fun PreviewHomeScreen() {
     TransactionTrackerTheme() {
-        HomeScreen()
+//        HomeScreen()
     }
 }

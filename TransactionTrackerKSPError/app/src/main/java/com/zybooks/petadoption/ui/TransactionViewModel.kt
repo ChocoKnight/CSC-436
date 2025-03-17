@@ -5,9 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.zybooks.petadoption.data.PetDataSource
-import com.zybooks.petadoption.data.Pet
+import com.zybooks.petadoption.data.Transaction
 
-class PetViewModel : ViewModel() {
-   val petList = PetDataSource().loadPets()
-   var selectedPet by mutableStateOf(Pet())
+class TransactionViewModel : ViewModel() {
+//   val petList = PetDataSource().loadPets()
+   var selectedTransaction by mutableStateOf(Transaction())
 }
+
