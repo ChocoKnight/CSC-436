@@ -26,12 +26,12 @@ fun TransactionScreen(
             BottomNavigationBar(navController = navController)
         }
     ) {
-            innerPadding ->
+        innerPadding ->
         Column(
             modifier = modifier.padding(innerPadding)
         ) {
             Text(
-                text = "Transaction History",
+                text = "Transactions",
                 modifier = modifier.padding(6.dp),
             )
         }
