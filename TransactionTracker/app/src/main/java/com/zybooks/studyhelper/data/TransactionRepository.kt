@@ -40,4 +40,8 @@ class TransactionRepository(context: Context) {
 
         return transactionDao.getTransactionsWithinDateRange(sevenDaysAgo, currentTime)
     }
+
+    fun addTransaction(transaction: Transaction) {
+
+    }
 }

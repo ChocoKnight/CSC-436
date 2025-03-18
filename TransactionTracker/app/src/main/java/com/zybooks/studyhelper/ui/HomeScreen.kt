@@ -61,7 +61,7 @@ fun HomeScreen(
             )
 
             Text(
-                text = "Please pick up your new family member during business hours.",
+                text = "List Recent Transactions",
                 modifier = modifier.padding(6.dp),
             )
         }

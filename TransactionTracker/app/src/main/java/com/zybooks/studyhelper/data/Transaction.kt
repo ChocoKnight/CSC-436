@@ -12,11 +12,13 @@ enum class TransactionType {
 data class Transaction(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
+
     val type: TransactionType = TransactionType.MISC,
     val name: String = "",
     val location: String = "",
     val amount: Double = 0.0,
     val description: String = "",
+
     @ColumnInfo(name = "created")
     var creationTime: Long = System.currentTimeMillis()
 )
