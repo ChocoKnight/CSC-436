@@ -1,6 +1,7 @@
 package com.zybooks.studyhelper.ui
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.HorizontalDivider
@@ -33,45 +34,46 @@ fun HomeScreen(
         floatingActionButton = {
             FloatingActionButtonAddTransaction(navController = navController)
         }
-    ) {
-            innerPadding ->
+    ) { innerPadding ->
         Column(
-            modifier = modifier.padding(innerPadding)
+            modifier = modifier.padding(innerPadding),
+            horizontalAlignment = Alignment.CenterHorizontally  // Center all children horizontally
         ) {
             Text(
                 text = "Transactions",
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+                modifier = Modifier.padding(8.dp)  // Optional padding
             )
 
             HorizontalDivider(
-                modifier = Modifier.width(300.dp).align(Alignment.CenterHorizontally),
+//                modifier = Modifier.width(300.dp),  // No need for align here
+                modifier = Modifier.fillMaxWidth(),  // No need for align here
                 thickness = 1.dp,
                 color = Color.Gray
             )
 
             Text(
                 text = "Budget:  $00.00",
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+                modifier = Modifier.padding(8.dp)  // Optional padding
             )
 
             HorizontalDivider(
-                modifier = Modifier.width(300.dp).align(Alignment.CenterHorizontally),
+                modifier = Modifier.fillMaxWidth(),  // No need for align here
                 thickness = 1.dp,
                 color = Color.Gray
             )
 
             Text(
-                text = "List Recent Transactions",
-                modifier = modifier.padding(6.dp),
+                text = "Recent Transactions",
+                modifier = Modifier.padding(6.dp),
             )
         }
     }
 }
 
-@Preview
-@Composable
-fun PreviewHomeScreen() {
-    TransactionTrackerTheme() {
-//        HomeScreen()
-    }
-}
+//@Preview
+//@Composable
+//fun PreviewHomeScreen() {
+//    TransactionTrackerTheme() {
+////        HomeScreen()
+//    }
+//}

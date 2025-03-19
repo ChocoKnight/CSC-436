@@ -11,7 +11,7 @@ enum class TransactionType {
 @Entity
 data class Transaction(
     @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
+    var id: Long = 0,
 
     val type: TransactionType = TransactionType.MISC,
     val name: String = "",

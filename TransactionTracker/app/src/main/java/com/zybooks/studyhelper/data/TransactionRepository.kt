@@ -42,6 +42,8 @@ class TransactionRepository(context: Context) {
     }
 
     fun addTransaction(transaction: Transaction) {
-
+        CoroutineScope(Dispatchers.IO).launch {
+            transaction.id = transactionDao.addTransaction(transaction)
+        }
     }
 }

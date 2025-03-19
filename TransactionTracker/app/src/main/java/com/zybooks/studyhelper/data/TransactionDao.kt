@@ -14,7 +14,7 @@ interface TransactionDao {
     @Query("SELECT * FROM `Transaction` WHERE created BETWEEN :startTimestamp AND :endTimestamp")
     abstract fun getTransactionsWithinDateRange(startTimestamp: Long, endTimestamp: Long): Flow<List<Transaction>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     fun addTransaction(transaction: Transaction): Long
 
     @Update

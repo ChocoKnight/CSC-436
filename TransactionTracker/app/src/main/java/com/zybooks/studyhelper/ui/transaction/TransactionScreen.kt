@@ -34,24 +34,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.zybooks.studyhelper.ui.theme.TransactionTrackerTheme
 
 @Composable
-fun FloatingActionButtonConfirmTransaction(
-    navController: NavController
-) {
-    FloatingActionButton(
-        onClick = {
-            navController.navigate(Routes.NewTransaction) {
-                popUpTo(navController.graph.startDestinationId)
-            }
-        }
-    ) {
-        Icon(
-            imageVector = Icons.Default.Check,
-            contentDescription = "Add Transaction"
-        )
-    }
-}
-
-@Composable
 fun TransactionScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
@@ -73,7 +55,20 @@ fun TransactionScreen(
             BottomNavigationBar(navController = navController)
         },
         floatingActionButton = {
-            FloatingActionButtonConfirmTransaction(navController = navController)
+            FloatingActionButton(
+                onClick = {
+                    viewModel.addTransaction()
+                    onSaveClick()
+                    navController.navigate(Routes.NewTransaction) {
+                        popUpTo(navController.graph.startDestinationId)
+                    }
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Check,
+                    contentDescription = "Add Transaction"
+                )
+            }
         }
     ) {
         innerPadding ->
@@ -93,6 +88,99 @@ fun TransactionEntry(
     onTransactionChange: (Transaction) -> Unit,
     modifier: Modifier = Modifier
     ) {
+//    Row (
+//        modifier = Modifier.fillMaxWidth().padding(8.dp),
+//        horizontalArrangement = Arrangement.Center,
+//        verticalAlignment = Alignment.CenterVertically
+//    ) {
+//        Column (
+//            modifier = modifier.fillMaxWidth()
+//        ){
+//            Text(
+//                text = "Location",
+//                fontSize = 20.sp,
+//                modifier = Modifier.padding(8.dp),
+//            )
+//
+//            Text(
+//                text = "Name",
+//                fontSize = 20.sp,
+//                modifier = Modifier.padding(8.dp),
+//            )
+//
+//            Text(
+//                text = "Description",
+//                fontSize = 20.sp,
+//                modifier = Modifier.padding(8.dp),
+//            )
+//
+//            Text(
+//                text = "Amount",
+//                fontSize = 20.sp,
+//                modifier = Modifier.padding(8.dp),
+//            )
+//        }
+//
+//        Column (
+//            modifier = modifier.fillMaxWidth()
+//        ){
+//            TextField(
+//                value = transaction.location,
+//                onValueChange = { onTransactionChange(transaction.copy(location = it)) },
+//                singleLine = false,
+//                textStyle = TextStyle.Default.copy(fontSize = 20.sp),
+//                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+//                modifier = Modifier
+//                    .weight(1f)
+//                    .padding(8.dp)
+//                    .border(1.dp, Color.Black)
+//                    .background(Color.White)
+//            )
+//
+//            TextField(
+//                value = transaction.name,
+//                onValueChange = { onTransactionChange(transaction.copy(name = it)) },
+//                singleLine = false,
+//                textStyle = TextStyle.Default.copy(fontSize = 20.sp),
+//                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+//                modifier = Modifier
+//                    .weight(1f)
+//                    .padding(8.dp)
+//                    .border(1.dp, Color.Black)
+//                    .background(Color.White)
+//            )
+//
+//            TextField(
+//                value = transaction.description,
+//                onValueChange = { onTransactionChange(transaction.copy(description = it)) },
+//                singleLine = false,
+//                textStyle = TextStyle.Default.copy(fontSize = 20.sp),
+//                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+//                modifier = Modifier
+//                    .weight(1f)
+//                    .padding(8.dp)
+//                    .border(1.dp, Color.Black)
+//                    .background(Color.White)
+//            )
+//
+//            TextField(
+//                value = transaction.amount.toString() ?: "0",
+//                onValueChange = { newValue ->
+//                    // Allow empty input for user deletions
+//                    val parsedValue = newValue.toDoubleOrNull() ?: 0.0
+//                    onTransactionChange(transaction.copy(amount = parsedValue))
+//                },
+//                singleLine = true,
+//                textStyle = TextStyle.Default.copy(fontSize = 20.sp),
+//                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+//                modifier = Modifier
+//                    .weight(1f)
+//                    .padding(8.dp)
+//                    .border(1.dp, Color.Black)
+//                    .background(Color.White)
+//            )
+//        }
+//    }
     Column(
         modifier = modifier.fillMaxWidth()
     ) {
@@ -125,7 +213,7 @@ fun TransactionEntry(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Name",
+                text = "Location",
                 fontSize = 20.sp,
                 modifier = Modifier.padding(8.dp),
             )
