@@ -144,16 +144,11 @@ fun TransactionField(
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            text = label,
-            fontSize = 20.sp,
-            modifier = Modifier
-                .width(labelWidth)
-                .padding(8.dp)
-        )
         TextField(
             value = value,
             onValueChange = onValueChange,
+            label = { Text(text = label) },
+            placeholder = { Text(text = label) },
             maxLines = Int.MAX_VALUE,
             textStyle = TextStyle.Default.copy(fontSize = 20.sp),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
