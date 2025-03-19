@@ -91,10 +91,6 @@ fun CameraScreen(
                 PhotoScreen(
                     photoUri = uiState.photoUri,
                     colorFilter = uiState.colorFilter,
-                    brightness = uiState.brightness,
-                    onBrightnessChange = {
-                        viewModel.changeBrightness(it)
-                    }
                 )
             }
         }
@@ -105,8 +101,6 @@ fun CameraScreen(
 fun PhotoScreen(
     photoUri: Uri,
     colorFilter: ColorFilter,
-    brightness: Float,
-    onBrightnessChange: (Float) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
