@@ -50,4 +50,8 @@ class TransactionRepository(context: Context) {
     fun updateTransaction(transaction: Transaction) {
         transactionDao.updateTransaction(transaction) // Update the transaction
     }
+
+    suspend fun deleteTransaction(transactionId: Long) {
+        transactionDao.deleteTransaction(transactionId)
+    }
 }

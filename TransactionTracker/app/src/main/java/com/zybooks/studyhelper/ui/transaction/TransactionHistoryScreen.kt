@@ -25,7 +25,6 @@ fun HistoryScreen(
     viewModel: TransactionViewModel = viewModel(
         factory = TransactionViewModel.Factory
     ),
-    onEditClick: (Long) -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -50,9 +49,15 @@ fun HistoryScreen(
                 modifier = Modifier.fillMaxSize()
             ) {
                 items(uiState.transactionList.sortedByDescending { it.creationTime }) { transaction ->
-                    TransactionItem(transaction = transaction, onEditClick = { transactionId ->
-                        navController.navigate(Routes.EditTransaction(transactionId = transactionId))
-                    })
+                    TransactionItem(
+                        transaction = transaction,
+                        onEditClick = { transactionId ->
+                            navController.navigate(Routes.EditTransaction(transactionId = transactionId))
+                        },
+                        onDeleteClick = { transactionId ->
+                            viewModel.deleteTransaction(transactionId)
+                        }
+                    )
                 }
             }
         }
@@ -60,7 +65,7 @@ fun HistoryScreen(
 }
 
 @Composable
-fun TransactionItem(transaction: Transaction, onEditClick: (Long) -> Unit) {
+fun TransactionItem(transaction: Transaction, onEditClick: (Long) -> Unit, onDeleteClick: (Long) -> Unit) {
     val formattedDate = formatDate(transaction.creationTime)
 
     val backgroundColor = when (transaction.type) {
@@ -77,6 +82,31 @@ fun TransactionItem(transaction: Transaction, onEditClick: (Long) -> Unit) {
         TransactionType.MISC -> Color(0xFFdfe5e6)
     }
 
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("Delete Transaction") },
+            text = { Text("Are you sure you want to delete this transaction?") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        onDeleteClick(transaction.id)
+                        showDeleteDialog = false
+                    }
+                ) {
+                    Text("Delete", color = Color.Red)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -84,18 +114,30 @@ fun TransactionItem(transaction: Transaction, onEditClick: (Long) -> Unit) {
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(containerColor = backgroundColor)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        )
+        {
             Text(text = "Location: ${transaction.location}")
             Text(text = "Name: ${transaction.name}")
             Text(text = "Amount: $${transaction.amount}")
             Text(text = "Description: ${transaction.description}")
             Text(text = "Date: $formattedDate")
 
-            // Clickable text for editing
-            TextButton(onClick = {
-                onEditClick(transaction.id)
-            }) {
-                Text("Edit")
+            Row {
+                TextButton(onClick = {
+                    onEditClick(transaction.id)
+                }) {
+                    Text("Edit")
+                }
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                TextButton(
+                    onClick = { showDeleteDialog = true }
+                ) {
+                    Text("Delete")
+                }
             }
         }
     }

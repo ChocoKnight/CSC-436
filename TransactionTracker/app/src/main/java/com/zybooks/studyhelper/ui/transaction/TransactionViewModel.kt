@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 class TransactionViewModel(
     savedStateHandle: SavedStateHandle,
@@ -48,6 +49,12 @@ class TransactionViewModel(
         TransactionListScreenUiState(
             transactionList = transactions,
         )
+    }
+
+    fun deleteTransaction(transactionId: Long) {
+        viewModelScope.launch {
+            transactionRepository.deleteTransaction(transactionId)
+        }
     }
 }
 
