@@ -33,10 +33,10 @@ fun HistoryScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val timeFrames = listOf("Daily", "Weekly", "All")
+    val timeFrames = listOf("Day", "Week", "All")
     val categories = listOf("All") + TransactionType.entries
 
-    var selectedTimeFrame by remember { mutableStateOf("Weekly") }
+    var selectedTimeFrame by remember { mutableStateOf("All") }
     var selectedCategory by remember { mutableStateOf("All") }
 
     var expandedTimeFrame by remember { mutableStateOf(false) }
@@ -135,7 +135,7 @@ fun HistoryScreen(
             }
 
             val transactionsToShow = when (selectedTimeFrame) {
-                "Daily" -> uiState.dailyTransactionList.filter { it.type.name == selectedCategory || selectedCategory == "All" }
+                "Day" -> uiState.dailyTransactionList.filter { it.type.name == selectedCategory || selectedCategory == "All" }
                 "All" -> uiState.transactionList.filter { it.type.name == selectedCategory || selectedCategory == "All" }
                 else -> uiState.weeklyTransactionList.filter { it.type.name == selectedCategory || selectedCategory == "All" }
             }

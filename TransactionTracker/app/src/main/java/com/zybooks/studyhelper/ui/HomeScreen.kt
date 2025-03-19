@@ -46,7 +46,7 @@ fun HomeScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    var selectedOption by remember { mutableStateOf("Weekly") }
+    var selectedOption by remember { mutableStateOf("Day") }
 
     Scaffold(
         topBar = {
@@ -73,21 +73,21 @@ fun HomeScreen(
                 horizontalArrangement = Arrangement.Center
             ) {
                 Button(
-                    onClick = { selectedOption = "Daily" },
+                    onClick = { selectedOption = "Day" },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (selectedOption == "Daily") Color.Blue else Color.Gray
+                        containerColor = if (selectedOption == "Day") Color.Blue else Color.Gray
                     )
                 ) {
-                    Text("Daily")
+                    Text("Day")
                 }
                 Spacer(modifier = Modifier.width(8.dp))
                 Button(
-                    onClick = { selectedOption = "Weekly" },
+                    onClick = { selectedOption = "Week" },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (selectedOption == "Weekly") Color.Blue else Color.Gray
+                        containerColor = if (selectedOption == "Week") Color.Blue else Color.Gray
                     )
                 ) {
-                    Text("Weekly")
+                    Text("Week")
                 }
                 Spacer(modifier = Modifier.width(8.dp))
                 Button(
@@ -112,8 +112,8 @@ fun HomeScreen(
             )
 
             val amountToShow = when (selectedOption) {
-                "Daily" -> uiState.totalSpentByDay
-                "Weekly" -> uiState.totalSpentByWeek
+                "Day" -> uiState.totalSpentByDay
+                "Week" -> uiState.totalSpentByWeek
                 "All" -> uiState.totalSpent
                 else -> 0.0
             }
@@ -129,24 +129,22 @@ fun HomeScreen(
                 color = Color.Gray
             )
 
-            if (selectedOption == "All") {
-                Text(
-                    text = "All Transactions",
-                    modifier = Modifier.padding(6.dp),
-                )
-            } else {
-                Text(
-                    text = "Recent Transactions ($selectedOption)",
-                    modifier = Modifier.padding(6.dp),
-                )
-            }
+            Text(
+                text = when (selectedOption) {
+                    "All" -> "All Transactions"
+                    "Day" -> "Recent Transaction from Today"
+                    "Week" -> "Recent Transactions from the last Week"
+                    else -> "Unknown Time Frame"
+                },
+                modifier = Modifier.padding(6.dp)
+            )
 
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ) {
                 val transactionsToShow = when (selectedOption) {
-                    "Daily" -> uiState.dailyTransactionList
-                    "Weekly" -> uiState.weeklyTransactionList
+                    "Day" -> uiState.dailyTransactionList
+                    "Week" -> uiState.weeklyTransactionList
                     "All" -> uiState.transactionList
                     else -> emptyList()
                 }
