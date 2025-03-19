@@ -10,4 +10,4 @@ Pet Adoption [here](PetAdoption/)
 Countdown Timer [here](CountdownTimer/)
 
 Transaction Tracker [here](TransactionTracker/)
-- The ReadMe and Figma Designs of Transaction Tracker [here](TransactionTrackerDetails/)
+- The ReadMe and Figma Designs are in the same location

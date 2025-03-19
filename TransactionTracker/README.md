@@ -9,7 +9,11 @@ This app was meant to take pictures of receipts from stores you visit to automat
 
 3. List of Android and Jetpack Compose Features that made this app possible
 
+    - Composable Functions
+    - State Management 
+    - Material 3 Components
     - RoomDatabase
+        - Flow
     - For the Camera
         - rememberLauncherForActivityResult
         - ActivityResultContracts
@@ -19,4 +23,5 @@ This app was meant to take pictures of receipts from stores you visit to automat
 
 5. Things of note
 
-    - 
+    - The material covered in this project mostly entails how to use Room Databases and the Camera 
+    - The transaction lists are lazy lists so they can accomdate any number of purchases within the selected time frame 
