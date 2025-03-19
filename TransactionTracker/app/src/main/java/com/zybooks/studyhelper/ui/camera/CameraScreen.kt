@@ -31,7 +31,6 @@ import com.zybooks.studyhelper.ui.BottomNavigationBar
 import com.zybooks.studyhelper.ui.TopBar
 import kotlinx.coroutines.launch
 
-
 @Composable
 fun CameraScreen(
     navController: NavController,
