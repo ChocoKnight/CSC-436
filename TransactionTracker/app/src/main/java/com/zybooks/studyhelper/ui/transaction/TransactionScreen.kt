@@ -53,7 +53,6 @@ fun TransactionScreen(
     transactionId: Long? = null
 ) {
     if (transactionId != null) {
-        // Load existing transaction for editing
         viewModel.loadTransaction(transactionId)
     }
 
