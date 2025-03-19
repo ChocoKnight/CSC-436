@@ -5,6 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.zybooks.studyhelper.ui.camera.CameraScreen
 import com.zybooks.studyhelper.ui.transaction.TransactionScreen
 import com.zybooks.studyhelper.ui.transaction.HistoryScreen
 import kotlinx.serialization.Serializable

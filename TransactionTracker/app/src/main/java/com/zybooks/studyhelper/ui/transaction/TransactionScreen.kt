@@ -37,8 +37,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.zybooks.studyhelper.data.Transaction
-import com.zybooks.studyhelper.data.TransactionType
+import com.zybooks.studyhelper.data.transaction.Transaction
+import com.zybooks.studyhelper.data.transaction.TransactionType
 import com.zybooks.studyhelper.ui.BottomNavigationBar
 import com.zybooks.studyhelper.ui.TopBar
 

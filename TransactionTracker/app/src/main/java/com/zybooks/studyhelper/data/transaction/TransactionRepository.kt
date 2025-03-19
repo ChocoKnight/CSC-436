@@ -1,4 +1,4 @@
-package com.zybooks.studyhelper.data
+package com.zybooks.studyhelper.data.transaction
 
 import android.content.Context
 import androidx.room.Room

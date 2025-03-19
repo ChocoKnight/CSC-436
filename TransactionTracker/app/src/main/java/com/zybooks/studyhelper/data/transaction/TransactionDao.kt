@@ -1,4 +1,4 @@
-package com.zybooks.studyhelper.data
+package com.zybooks.studyhelper.data.transaction
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow

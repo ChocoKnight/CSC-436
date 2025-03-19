@@ -9,8 +9,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.zybooks.studyhelper.TransactionHelperApplication
-import com.zybooks.studyhelper.data.Transaction
-import com.zybooks.studyhelper.data.TransactionRepository
+import com.zybooks.studyhelper.data.transaction.Transaction
+import com.zybooks.studyhelper.data.transaction.TransactionRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine

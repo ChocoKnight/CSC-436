@@ -20,8 +20,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.zybooks.studyhelper.R.drawable.camera
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,7 +74,14 @@ fun BottomNavigationBar(
                     }
                 },
                 icon = {
-                    Icon(item.icon, contentDescription = item.title)
+                    if (item.icon != Icons.Default.Info) {
+                        Icon(item.icon, contentDescription = item.title)
+                    } else {
+                        Icon(
+                            painter = painterResource(camera), // Load the bitmap image here
+                            contentDescription = item.title
+                        )
+                    }
                 },
                 label = {
                     Text(item.title)

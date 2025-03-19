@@ -12,11 +12,9 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import androidx.navigation.toRoute
 import com.zybooks.studyhelper.TransactionHelperApplication
-import com.zybooks.studyhelper.data.Transaction
-import com.zybooks.studyhelper.data.TransactionRepository
-import com.zybooks.studyhelper.ui.Routes
+import com.zybooks.studyhelper.data.transaction.Transaction
+import com.zybooks.studyhelper.data.transaction.TransactionRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
