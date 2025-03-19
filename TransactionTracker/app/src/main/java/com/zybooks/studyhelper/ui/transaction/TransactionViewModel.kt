@@ -35,19 +35,48 @@ class TransactionViewModel(
         }
     }
 
-    val uiState: StateFlow<TransactionListScreenUiState> = transformedFlow()
+    val uiState: StateFlow<TransactionsScreenUiState> = transformedFlow()
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000L),
-            initialValue = TransactionListScreenUiState(),
+            initialValue = TransactionsScreenUiState(),
         )
 
     private fun transformedFlow() = combine(
+        transformedTransactionsFlow(),
+        transformedSpendingFlow()
+    ) { transactionUiState, spendingUiState ->
+        TransactionsScreenUiState(
+            transactionList = transactionUiState.transactionList,
+            dailyTransactionList = transactionUiState.dailyTransactionList,
+            weeklyTransactionList = transactionUiState.weeklyTransactionList,
+            totalSpent = spendingUiState.totalSpent,
+            totalSpentByDay = spendingUiState.totalSpentByDay,
+            totalSpentByWeek = spendingUiState.totalSpentByWeek
+        )
+    }
+
+    private fun transformedTransactionsFlow() = combine(
         transactionRepository.getTransactions().filterNotNull(),
-        transactionRepository.getTransaction(0)
-    ) { transactions, otherData ->
-        TransactionListScreenUiState(
+        transactionRepository.getTransactionByDay().filterNotNull(),
+        transactionRepository.getTransactionByWeek().filterNotNull(),
+    ) { transactions, dailyTransactions, weeklyTransactions ->
+        TransactionsScreenUiState(
             transactionList = transactions,
+            dailyTransactionList = dailyTransactions,
+            weeklyTransactionList = weeklyTransactions,
+        )
+    }
+
+    private fun transformedSpendingFlow() = combine(
+        transactionRepository.getTotalAmountSpent().filterNotNull(),
+        transactionRepository.getAmountSpentByDay().filterNotNull(),
+        transactionRepository.getAmountSpentByWeek().filterNotNull()
+    ) { totalSpending, dailySpending, weeklySpending ->
+        TransactionsScreenUiState(
+            totalSpent = totalSpending,
+            totalSpentByDay = dailySpending,
+            totalSpentByWeek = weeklySpending
         )
     }
 
@@ -58,7 +87,11 @@ class TransactionViewModel(
     }
 }
 
-data class TransactionListScreenUiState(
-    val transaction: Transaction = Transaction(),
-    val transactionList: List<Transaction> = emptyList()
+data class TransactionsScreenUiState(
+    val transactionList: List<Transaction> = emptyList(),
+    val dailyTransactionList: List<Transaction> = emptyList(),
+    val weeklyTransactionList: List<Transaction> = emptyList(),
+    val totalSpent: Double = 0.0,
+    val totalSpentByDay: Double = 0.0,
+    val totalSpentByWeek: Double = 0.0
 )

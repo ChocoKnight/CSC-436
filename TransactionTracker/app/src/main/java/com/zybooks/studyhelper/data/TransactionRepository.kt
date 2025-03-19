@@ -8,6 +8,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 class TransactionRepository(context: Context) {
     private val databaseCallback = object : RoomDatabase.Callback() {
@@ -15,7 +16,6 @@ class TransactionRepository(context: Context) {
             super.onCreate(db)
 
             CoroutineScope(Dispatchers.IO).launch {
-//                addStarterData()
             }
         }
     }
@@ -34,11 +34,76 @@ class TransactionRepository(context: Context) {
 
     fun getTransaction(transactionId: Long) = transactionDao.getTransaction(transactionId)
 
-    fun getTransactionByWeek(): Flow<List<Transaction>> {
-        val currentTime = System.currentTimeMillis()
-        val sevenDaysAgo = currentTime - (7 * 24 * 60 * 60 * 1000) // 7 days in milliseconds
+    fun getTransactionByDay(): Flow<List<Transaction>> {
+        val calendar = Calendar.getInstance()
 
-        return transactionDao.getTransactionsWithinDateRange(sevenDaysAgo, currentTime)
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        val startOfDay = calendar.timeInMillis
+
+        calendar.set(Calendar.HOUR_OF_DAY, 23)
+        calendar.set(Calendar.MINUTE, 59)
+        calendar.set(Calendar.SECOND, 59)
+        val endOfDay = calendar.timeInMillis
+
+        return transactionDao.getTransactionsWithinDateRange(startOfDay, endOfDay)
+    }
+
+    fun getTransactionByWeek(): Flow<List<Transaction>> {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        val startOfWeek = calendar.timeInMillis
+
+        calendar.add(Calendar.DAY_OF_WEEK, 6)
+        calendar.set(Calendar.HOUR_OF_DAY, 23)
+        calendar.set(Calendar.MINUTE, 59)
+        calendar.set(Calendar.SECOND, 59)
+        val endOfWeek = calendar.timeInMillis
+
+        return transactionDao.getTransactionsWithinDateRange(startOfWeek, endOfWeek)
+    }
+
+    fun getTotalAmountSpent() = transactionDao.getTotalAmountSpentAllTime()
+
+    fun getAmountSpentByDay(): Flow<Double> {
+        val calendar = Calendar.getInstance()
+
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        val startOfDay = calendar.timeInMillis
+
+        calendar.set(Calendar.HOUR_OF_DAY, 23)
+        calendar.set(Calendar.MINUTE, 59)
+        calendar.set(Calendar.SECOND, 59)
+        val endOfDay = calendar.timeInMillis
+
+        return transactionDao.getTotalAmountSpentWithinDateRange(startOfDay, endOfDay)
+    }
+
+    fun getAmountSpentByWeek(): Flow<Double> {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        val startOfWeek = calendar.timeInMillis
+
+        calendar.add(Calendar.DAY_OF_WEEK, 6)
+        calendar.set(Calendar.HOUR_OF_DAY, 23)
+        calendar.set(Calendar.MINUTE, 59)
+        calendar.set(Calendar.SECOND, 59)
+        val endOfWeek = calendar.timeInMillis
+
+        return transactionDao.getTotalAmountSpentWithinDateRange(startOfWeek, endOfWeek)
     }
 
     fun addTransaction(transaction: Transaction) {

@@ -6,13 +6,19 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface TransactionDao {
     @Query("Select * From `Transaction`")
-    abstract fun getTransactions(): Flow<List<Transaction>>
+    fun getTransactions(): Flow<List<Transaction>>
 
     @Query("Select * From `Transaction` Where id = :id")
-    abstract fun getTransaction(id: Long): Flow<Transaction?>
+    fun getTransaction(id: Long): Flow<Transaction?>
 
     @Query("SELECT * FROM `Transaction` WHERE created BETWEEN :startTimestamp AND :endTimestamp")
-    abstract fun getTransactionsWithinDateRange(startTimestamp: Long, endTimestamp: Long): Flow<List<Transaction>>
+    fun getTransactionsWithinDateRange(startTimestamp: Long, endTimestamp: Long): Flow<List<Transaction>>
+
+    @Query("SELECT COALESCE(SUM(amount), 0) FROM `Transaction`")
+    fun getTotalAmountSpentAllTime(): Flow<Double>
+
+    @Query("SELECT COALESCE(SUM(amount), 0) FROM `Transaction` WHERE created BETWEEN :startTimestamp AND :endTimestamp")
+    fun getTotalAmountSpentWithinDateRange(startTimestamp: Long, endTimestamp: Long): Flow<Double>
 
     @Insert
     fun addTransaction(transaction: Transaction): Long
