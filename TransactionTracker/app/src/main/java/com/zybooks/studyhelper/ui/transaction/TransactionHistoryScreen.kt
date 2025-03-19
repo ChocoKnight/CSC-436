@@ -14,6 +14,7 @@ import androidx.navigation.NavController
 import com.zybooks.studyhelper.data.Transaction
 import com.zybooks.studyhelper.data.TransactionType
 import com.zybooks.studyhelper.ui.*
+import com.zybooks.studyhelper.ui.theme.categoryColors
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -69,17 +70,17 @@ fun TransactionItem(transaction: Transaction, onEditClick: (Long) -> Unit, onDel
     val formattedDate = formatDate(transaction.creationTime)
 
     val backgroundColor = when (transaction.type) {
-        TransactionType.GROCERIES -> Color(0xFFF18275)
-        TransactionType.TAKEOUT -> Color(0xFFF6C26C)
-        TransactionType.TRANSPORTATION -> Color(0xFF99C0F5)
-        TransactionType.UTILITIES -> Color(0xFF5fd4ce)
-        TransactionType.HOUSING -> Color(0xFFe6eb91)
-        TransactionType.ENTERTAINMENT -> Color(0xFFB5A0F8)
-        TransactionType.PERSONAL_CARE -> Color(0xFFed9ada)
-        TransactionType.HEALTHCARE -> Color(0xFF8c888b)
-        TransactionType.SAVINGS -> Color(0xFF77EE8C)
-        TransactionType.PERSONAL -> Color(0xFFF8AB85)
-        TransactionType.MISC -> Color(0xFFdfe5e6)
+        TransactionType.GROCERIES -> categoryColors[0]
+        TransactionType.TAKEOUT -> categoryColors[1]
+        TransactionType.TRANSPORTATION -> categoryColors[2]
+        TransactionType.UTILITIES -> categoryColors[3]
+        TransactionType.HOUSING -> categoryColors[4]
+        TransactionType.ENTERTAINMENT -> categoryColors[5]
+        TransactionType.PERSONAL_CARE -> categoryColors[6]
+        TransactionType.HEALTHCARE -> categoryColors[7]
+        TransactionType.SAVINGS -> categoryColors[8]
+        TransactionType.PERSONAL -> categoryColors[9]
+        TransactionType.MISC -> categoryColors[10]
     }
 
     var showDeleteDialog by remember { mutableStateOf(false) }
@@ -120,8 +121,9 @@ fun TransactionItem(transaction: Transaction, onEditClick: (Long) -> Unit, onDel
         {
             Text(text = "Location: ${transaction.location}")
             Text(text = "Name: ${transaction.name}")
-            Text(text = "Amount: $${transaction.amount}")
+            Text(text = "Type: ${transaction.type}")
             Text(text = "Description: ${transaction.description}")
+            Text(text = "Amount: $${transaction.amount}")
             Text(text = "Date: $formattedDate")
 
             Row {
