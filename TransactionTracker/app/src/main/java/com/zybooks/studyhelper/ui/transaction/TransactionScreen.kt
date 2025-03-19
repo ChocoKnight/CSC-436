@@ -2,36 +2,46 @@ package com.zybooks.studyhelper.ui.transaction
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.zybooks.studyhelper.data.Transaction
+import com.zybooks.studyhelper.data.TransactionType
 import com.zybooks.studyhelper.ui.BottomNavigationBar
 import com.zybooks.studyhelper.ui.Routes
 import com.zybooks.studyhelper.ui.TopBar
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.zybooks.studyhelper.ui.theme.TransactionTrackerTheme
 
 @Composable
 fun TransactionScreen(
@@ -59,9 +69,7 @@ fun TransactionScreen(
                 onClick = {
                     viewModel.addTransaction()
                     onSaveClick()
-                    navController.navigate(Routes.NewTransaction) {
-                        popUpTo(navController.graph.startDestinationId)
-                    }
+                    navController.popBackStack()
                 }
             ) {
                 Icon(
@@ -87,198 +95,111 @@ fun TransactionEntry(
     transaction: Transaction,
     onTransactionChange: (Transaction) -> Unit,
     modifier: Modifier = Modifier
-    ) {
-//    Row (
-//        modifier = Modifier.fillMaxWidth().padding(8.dp),
-//        horizontalArrangement = Arrangement.Center,
-//        verticalAlignment = Alignment.CenterVertically
-//    ) {
-//        Column (
-//            modifier = modifier.fillMaxWidth()
-//        ){
-//            Text(
-//                text = "Location",
-//                fontSize = 20.sp,
-//                modifier = Modifier.padding(8.dp),
-//            )
-//
-//            Text(
-//                text = "Name",
-//                fontSize = 20.sp,
-//                modifier = Modifier.padding(8.dp),
-//            )
-//
-//            Text(
-//                text = "Description",
-//                fontSize = 20.sp,
-//                modifier = Modifier.padding(8.dp),
-//            )
-//
-//            Text(
-//                text = "Amount",
-//                fontSize = 20.sp,
-//                modifier = Modifier.padding(8.dp),
-//            )
-//        }
-//
-//        Column (
-//            modifier = modifier.fillMaxWidth()
-//        ){
-//            TextField(
-//                value = transaction.location,
-//                onValueChange = { onTransactionChange(transaction.copy(location = it)) },
-//                singleLine = false,
-//                textStyle = TextStyle.Default.copy(fontSize = 20.sp),
-//                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-//                modifier = Modifier
-//                    .weight(1f)
-//                    .padding(8.dp)
-//                    .border(1.dp, Color.Black)
-//                    .background(Color.White)
-//            )
-//
-//            TextField(
-//                value = transaction.name,
-//                onValueChange = { onTransactionChange(transaction.copy(name = it)) },
-//                singleLine = false,
-//                textStyle = TextStyle.Default.copy(fontSize = 20.sp),
-//                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-//                modifier = Modifier
-//                    .weight(1f)
-//                    .padding(8.dp)
-//                    .border(1.dp, Color.Black)
-//                    .background(Color.White)
-//            )
-//
-//            TextField(
-//                value = transaction.description,
-//                onValueChange = { onTransactionChange(transaction.copy(description = it)) },
-//                singleLine = false,
-//                textStyle = TextStyle.Default.copy(fontSize = 20.sp),
-//                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-//                modifier = Modifier
-//                    .weight(1f)
-//                    .padding(8.dp)
-//                    .border(1.dp, Color.Black)
-//                    .background(Color.White)
-//            )
-//
-//            TextField(
-//                value = transaction.amount.toString() ?: "0",
-//                onValueChange = { newValue ->
-//                    // Allow empty input for user deletions
-//                    val parsedValue = newValue.toDoubleOrNull() ?: 0.0
-//                    onTransactionChange(transaction.copy(amount = parsedValue))
-//                },
-//                singleLine = true,
-//                textStyle = TextStyle.Default.copy(fontSize = 20.sp),
-//                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-//                modifier = Modifier
-//                    .weight(1f)
-//                    .padding(8.dp)
-//                    .border(1.dp, Color.Black)
-//                    .background(Color.White)
-//            )
-//        }
-//    }
+) {
     Column(
         modifier = modifier.fillMaxWidth()
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(8.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Location",
-                fontSize = 20.sp,
-                modifier = Modifier.padding(8.dp),
-            )
-            TextField(
-                value = transaction.location,
-                onValueChange = { onTransactionChange(transaction.copy(location = it)) },
-                singleLine = false,
-                textStyle = TextStyle.Default.copy(fontSize = 20.sp),
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(8.dp)
-                    .border(1.dp, Color.Black)
-                    .background(Color.White)
-            )
+        val labelWidth = 125.dp
+
+        TransactionField(label = "Location", labelWidth, transaction.location) {
+            onTransactionChange(transaction.copy(location = it))
         }
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(8.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Location",
-                fontSize = 20.sp,
-                modifier = Modifier.padding(8.dp),
-            )
-            TextField(
-                value = transaction.name,
-                onValueChange = { onTransactionChange(transaction.copy(name = it)) },
-                singleLine = false,
-                textStyle = TextStyle.Default.copy(fontSize = 20.sp),
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(8.dp)
-                    .border(1.dp, Color.Black)
-                    .background(Color.White)
-            )
+
+        TransactionField(label = "Name", labelWidth, transaction.name) {
+            onTransactionChange(transaction.copy(name = it))
         }
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(8.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Description",
-                fontSize = 20.sp,
-                modifier = Modifier.padding(8.dp),
-            )
-            TextField(
-                value = transaction.description,
-                onValueChange = { onTransactionChange(transaction.copy(description = it)) },
-                singleLine = false,
-                textStyle = TextStyle.Default.copy(fontSize = 20.sp),
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(8.dp)
-                    .border(1.dp, Color.Black)
-                    .background(Color.White)
-            )
+
+        TransactionField(label = "Description", labelWidth, transaction.description) {
+            onTransactionChange(transaction.copy(description = it))
         }
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(8.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
+
+        TransactionField(label = "Amount", labelWidth, transaction.amount.toString()) { newValue ->
+            val parsedValue = newValue.toDoubleOrNull() ?: 0.0
+            onTransactionChange(transaction.copy(amount = parsedValue))
+        }
+
+        TransactionTypeDropdown(transaction.type) { selectedType ->
+            onTransactionChange(transaction.copy(type = selectedType))
+        }
+    }
+}
+
+@Composable
+fun TransactionField(
+    label: String,
+    labelWidth: Dp,
+    value: String,
+    onValueChange: (String) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = label,
+            fontSize = 20.sp,
+            modifier = Modifier
+                .width(labelWidth) // Fixed width for alignment
+                .padding(8.dp)
+        )
+        TextField(
+            value = value,
+            onValueChange = onValueChange,
+            maxLines = Int.MAX_VALUE, // Allows wrapping
+            textStyle = TextStyle.Default.copy(fontSize = 20.sp),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            modifier = Modifier
+                .weight(1f)
+                .padding(8.dp)
+                .border(1.dp, Color.Black)
+                .background(Color.White)
+                .heightIn(min = 56.dp) // Ensures it has a minimum height
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TransactionTypeDropdown(
+    selectedType: TransactionType,
+    onTypeSelected: (TransactionType) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+    ) {
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = { expanded = !expanded }
         ) {
-            Text(
-                text = "Amount",
-                fontSize = 20.sp,
-                modifier = Modifier.padding(8.dp),
-            )
             TextField(
-                value = transaction.amount.toString() ?: "0",
-                onValueChange = { newValue ->
-                    // Allow empty input for user deletions
-                    val parsedValue = newValue.toDoubleOrNull() ?: 0.0
-                    onTransactionChange(transaction.copy(amount = parsedValue))
-                },
-                singleLine = true,
-                textStyle = TextStyle.Default.copy(fontSize = 20.sp),
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                value = selectedType.name,
+                onValueChange = {},
+                readOnly = true,
                 modifier = Modifier
-                    .weight(1f)
-                    .padding(8.dp)
-                    .border(1.dp, Color.Black)
-                    .background(Color.White)
+                    .menuAnchor()
+                    .fillMaxWidth(),
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) }
             )
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                TransactionType.entries.forEach { type ->
+                    DropdownMenuItem(
+                        text = { Text(type.name) },
+                        onClick = {
+                            onTypeSelected(type)
+                            expanded = false
+                        }
+                    )
+                }
+            }
         }
     }
 }
