@@ -98,9 +98,8 @@ fun HomeScreen(
                         containerColor = if (selectedOption == "All") Color.Blue else Color.Gray
                     )
                 ) {
-                    Text("Weekly")
+                    Text("All")
                 }
-
             }
 
             HorizontalDivider(
@@ -111,6 +110,18 @@ fun HomeScreen(
 
             Text(
                 text = "Amount Spent",
+                modifier = Modifier.padding(8.dp)
+            )
+
+            val amountToShow = when (selectedOption) {
+                "Daily" -> uiState.totalSpentByDay
+                "Weekly" -> uiState.totalSpentByWeek
+                "All" -> uiState.totalSpent
+                else -> 0.0
+            }
+
+            Text(
+                text = "$$amountToShow",
                 modifier = Modifier.padding(8.dp)
             )
 
