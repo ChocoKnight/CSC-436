@@ -46,4 +46,8 @@ class TransactionRepository(context: Context) {
             transaction.id = transactionDao.addTransaction(transaction)
         }
     }
+
+    fun updateTransaction(transaction: Transaction) {
+        transactionDao.updateTransaction(transaction) // Update the transaction
+    }
 }

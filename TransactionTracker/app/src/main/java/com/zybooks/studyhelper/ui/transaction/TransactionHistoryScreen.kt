@@ -50,7 +50,9 @@ fun HistoryScreen(
                 modifier = Modifier.fillMaxSize()
             ) {
                 items(uiState.transactionList.sortedByDescending { it.creationTime }) { transaction ->
-                    TransactionItem(transaction = transaction, onEditClick = onEditClick)
+                    TransactionItem(transaction = transaction, onEditClick = { transactionId ->
+                        navController.navigate(Routes.EditTransaction(transactionId = transactionId))
+                    })
                 }
             }
         }
@@ -62,16 +64,16 @@ fun TransactionItem(transaction: Transaction, onEditClick: (Long) -> Unit) {
     val formattedDate = formatDate(transaction.creationTime)
 
     val backgroundColor = when (transaction.type) {
-        TransactionType.GROCERIES -> Color(0xFFf04832)
-        TransactionType.TAKEOUT -> Color(0xFFe0b769)
-        TransactionType.TRANSPORTATION -> Color(0xFF4949eb)
+        TransactionType.GROCERIES -> Color(0xFFF18275)
+        TransactionType.TAKEOUT -> Color(0xFFF6C26C)
+        TransactionType.TRANSPORTATION -> Color(0xFF99C0F5)
         TransactionType.UTILITIES -> Color(0xFF5fd4ce)
         TransactionType.HOUSING -> Color(0xFFe6eb91)
-        TransactionType.ENTERTAINMENT -> Color(0xFFcf5ee0)
+        TransactionType.ENTERTAINMENT -> Color(0xFFB5A0F8)
         TransactionType.PERSONAL_CARE -> Color(0xFFed9ada)
         TransactionType.HEALTHCARE -> Color(0xFF8c888b)
-        TransactionType.SAVINGS -> Color(0xFF23c240)
-        TransactionType.PERSONAL -> Color(0xFFa68ff2)
+        TransactionType.SAVINGS -> Color(0xFF77EE8C)
+        TransactionType.PERSONAL -> Color(0xFFF8AB85)
         TransactionType.MISC -> Color(0xFFdfe5e6)
     }
 
@@ -85,11 +87,14 @@ fun TransactionItem(transaction: Transaction, onEditClick: (Long) -> Unit) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = "Location: ${transaction.location}")
             Text(text = "Name: ${transaction.name}")
-            Text(text = "Amount: ${transaction.amount}")
+            Text(text = "Amount: $${transaction.amount}")
+            Text(text = "Description: ${transaction.description}")
             Text(text = "Date: $formattedDate")
 
             // Clickable text for editing
-            TextButton(onClick = { onEditClick(transaction.id) }) {
+            TextButton(onClick = {
+                onEditClick(transaction.id)
+            }) {
                 Text("Edit")
             }
         }

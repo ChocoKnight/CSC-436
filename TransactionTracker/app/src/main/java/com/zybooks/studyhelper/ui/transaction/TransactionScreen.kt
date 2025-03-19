@@ -40,7 +40,6 @@ import androidx.navigation.NavController
 import com.zybooks.studyhelper.data.Transaction
 import com.zybooks.studyhelper.data.TransactionType
 import com.zybooks.studyhelper.ui.BottomNavigationBar
-import com.zybooks.studyhelper.ui.Routes
 import com.zybooks.studyhelper.ui.TopBar
 
 @Composable
@@ -50,9 +49,14 @@ fun TransactionScreen(
     viewModel: AddTransactionViewModel = viewModel(
         factory = AddTransactionViewModel.Factory
     ),
-    onUpClick: () -> Unit = {},
-    onSaveClick: () -> Unit = {}
+    onSaveClick: () -> Unit = {},
+    transactionId: Long? = null
 ) {
+    if (transactionId != null) {
+        // Load existing transaction for editing
+        viewModel.loadTransaction(transactionId)
+    }
+
     Scaffold(
         topBar = {
             TopBar(
@@ -67,14 +71,18 @@ fun TransactionScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    viewModel.addTransaction()
+                    if (transactionId == null) {
+                        viewModel.addTransaction()
+                    } else {
+                        viewModel.updateTransaction()
+                    }
                     onSaveClick()
                     navController.popBackStack()
                 }
             ) {
                 Icon(
                     imageVector = Icons.Default.Check,
-                    contentDescription = "Add Transaction"
+                    contentDescription = if (transactionId == null) "Add Transaction" else "Update Transaction"
                 )
             }
         }
@@ -141,13 +149,13 @@ fun TransactionField(
             text = label,
             fontSize = 20.sp,
             modifier = Modifier
-                .width(labelWidth) // Fixed width for alignment
+                .width(labelWidth)
                 .padding(8.dp)
         )
         TextField(
             value = value,
             onValueChange = onValueChange,
-            maxLines = Int.MAX_VALUE, // Allows wrapping
+            maxLines = Int.MAX_VALUE,
             textStyle = TextStyle.Default.copy(fontSize = 20.sp),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             modifier = Modifier
@@ -155,7 +163,7 @@ fun TransactionField(
                 .padding(8.dp)
                 .border(1.dp, Color.Black)
                 .background(Color.White)
-                .heightIn(min = 56.dp) // Ensures it has a minimum height
+                .heightIn(min = 56.dp)
         )
     }
 }
