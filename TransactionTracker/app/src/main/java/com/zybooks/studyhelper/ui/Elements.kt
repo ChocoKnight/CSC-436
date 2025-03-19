@@ -42,7 +42,11 @@ fun TopBar(
         navigationIcon = {
             if (canNavigateBack) {
                 IconButton(onClick = {
-                    navController.navigateUp()
+                    if (navController.previousBackStackEntry != null) {
+                        navController.navigateUp()
+                    } else {
+                        navController.popBackStack()
+                    }
                 }) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
                 }
@@ -78,7 +82,7 @@ fun BottomNavigationBar(
                         Icon(item.icon, contentDescription = item.title)
                     } else {
                         Icon(
-                            painter = painterResource(camera), // Load the bitmap image here
+                            painter = painterResource(camera),
                             contentDescription = item.title
                         )
                     }
