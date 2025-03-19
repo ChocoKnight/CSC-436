@@ -3,8 +3,11 @@ package com.zybooks.studyhelper.ui.transaction
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -19,6 +22,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryScreen(
     navController: NavController,
@@ -28,6 +32,15 @@ fun HistoryScreen(
     ),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    val timeFrames = listOf("Daily", "Weekly", "All")
+    val categories = listOf("All") + TransactionType.entries
+
+    var selectedTimeFrame by remember { mutableStateOf("Weekly") }
+    var selectedCategory by remember { mutableStateOf("All") }
+
+    var expandedTimeFrame by remember { mutableStateOf(false) }
+    var expandedCategory by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -46,10 +59,91 @@ fun HistoryScreen(
         Column(
             modifier = modifier.padding(innerPadding)
         ) {
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                ExposedDropdownMenuBox(
+                    expanded = expandedTimeFrame,
+                    onExpandedChange = { expandedTimeFrame = !expandedTimeFrame }
+                ) {
+                    TextField(
+                        readOnly = true,
+                        value = selectedTimeFrame,
+                        onValueChange = {},
+                        label = { Text("Select Time Frame") },
+                        trailingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.ArrowDropDown,
+                                contentDescription = "Dropdown icon"
+                            )
+                        },
+                        modifier = Modifier.fillMaxWidth().menuAnchor()
+                    )
+                    ExposedDropdownMenu(
+                        expanded = expandedTimeFrame,
+                        onDismissRequest = { expandedTimeFrame = false }
+                    ) {
+                        timeFrames.forEach { timeFrame ->
+                            DropdownMenuItem(
+                                text = { Text(timeFrame) },
+                                onClick = {
+                                    selectedTimeFrame = timeFrame
+                                    expandedTimeFrame = false
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                ExposedDropdownMenuBox(
+                    expanded = expandedCategory,
+                    onExpandedChange = { expandedCategory = !expandedCategory }
+                ) {
+                    TextField(
+                        readOnly = true,
+                        value = selectedCategory,
+                        onValueChange = {},
+                        label = { Text("Select Transaction Type") },
+                        trailingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.ArrowDropDown,
+                                contentDescription = "Dropdown icon"
+                            )
+                        },
+                        modifier = Modifier.fillMaxWidth().menuAnchor()
+                    )
+                    ExposedDropdownMenu(
+                        expanded = expandedCategory,
+                        onDismissRequest = { expandedCategory = false }
+                    ) {
+                        categories.forEach { category ->
+                            DropdownMenuItem(
+                                text = { Text(category.toString()) },
+                                onClick = {
+                                selectedCategory = category.toString()
+                                expandedCategory = false
+                            })
+                        }
+                    }
+                }
+            }
+
+            val transactionsToShow = when (selectedTimeFrame) {
+                "Daily" -> uiState.dailyTransactionList.filter { it.type.name == selectedCategory || selectedCategory == "All" }
+                "All" -> uiState.transactionList.filter { it.type.name == selectedCategory || selectedCategory == "All" }
+                else -> uiState.weeklyTransactionList.filter { it.type.name == selectedCategory || selectedCategory == "All" }
+            }
+
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ) {
-                items(uiState.transactionList.sortedByDescending { it.creationTime }) { transaction ->
+                items(transactionsToShow.sortedByDescending { it.creationTime }) { transaction ->
                     TransactionItem(
                         transaction = transaction,
                         onEditClick = { transactionId ->

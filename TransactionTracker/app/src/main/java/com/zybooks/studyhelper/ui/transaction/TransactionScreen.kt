@@ -187,6 +187,7 @@ fun TransactionTypeDropdown(
         ) {
             TextField(
                 value = selectedType.name,
+                label = { Text("Select Transaction Type") },
                 onValueChange = {},
                 readOnly = true,
                 modifier = Modifier
